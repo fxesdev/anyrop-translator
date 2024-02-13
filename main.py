@@ -18,5 +18,5 @@ disasbp = open('disasbp')
 for llline in ropa:
   if llline in disasa:
     if llline in disasbp:
-      os.system('printf ' + "'" +  disasbp.split()[0] + disasbp.split()[1] + disasbp.split()[2] + disasbp.split()[3] + disasbp.split()[4] + "'")
+      os.system('printf ' + "'" + disasbp + "'") #.split()[0] + disasbp.split()[1] + disasbp.split()[2] + disasbp.split()[3] + disasbp.split()[4] + "'")
     
