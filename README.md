@@ -1,4 +1,4 @@
-# anyrop-translator v0.01
+# anyrop-translator v0.02
 translate any rop! so long as it has the gadgets lol!
 
 __this tool is very buggy!__
