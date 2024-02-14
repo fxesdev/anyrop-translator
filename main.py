@@ -51,7 +51,7 @@ def compile_translate():
     result_text.insert(tk.END, '\n'.join(matching_strings))
 
 root = tk.Tk()
-root.title("String Matching")
+root.title("AnyRop Translator v0.16")
 
 ropfile = ""
 disasfile = ""
