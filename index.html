@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AnyRop Translator</title>
+</head>
+<body>
+<h1>AnyRop Translator</h1>
+
+<label for="rop-file">ROP File:</label>
+<input type="file" id="rop-file"><br><br>
+
+<label for="disas-file">Disas File:</label>
+<input type="file" id="disas-file"><br><br>
+
+<button onclick="compileTranslate()">Translate</button><br><br>
+
+<label for="output">Output:</label><br>
+<textarea id="output" rows="10" cols="50"></textarea><br>
+
+<script>
+function removeNewline(strings) {
+    return strings.map(string => string.replace('\n', ''));
+}
+
+function extractLinesBeforePopPc(lines) {
+    let linesBeforePopPc = [];
+    let previousLine = '';
+    for (let line of lines) {
+        if (line.includes('pop pc')) {
+            linesBeforePopPc.push(previousLine.trim());
+        }
+        previousLine = line;
+    }
+    return linesBeforePopPc;
+}
+
+function findMatchingStrings(list1, list2) {
+    let result = [];
+    for (let string1 of list1) {
+        let foundMatch = false;
+        for (let string2 of list2) {
+            if (string2.includes(string1)) {
+                let extractedChars = string2.slice(33, 39);
+                let formattedChars = extractedChars.slice(3, 5) + ' ' + extractedChars.slice(1, 3) + ' ' + 'x' + extractedChars[0] + ' xx';
+                result.push(formattedChars);
+                foundMatch = true;
+                break;
+            }
+        }
+        if (!foundMatch) {
+            result.push("No match found for " + string1);
+        }
+    }
+    return result;
+}
+
+function compileTranslate() {
+    let ropFileInput = document.getElementById('rop-file');
+    let disasFileInput = document.getElementById('disas-file');
+    let outputTextArea = document.getElementById('output');
+
+    let ropFile = ropFileInput.files[0];
+    let disasFile = disasFileInput.files[0];
+
+    let ropReader = new FileReader();
+    let disasReader = new FileReader();
+
+    ropReader.onload = function() {
+        let ropContent = removeNewline(ropReader.result.split('\n'));
+        disasReader.onload = function() {
+            let disasContent = removeNewline(disasReader.result.split('\n'));
+            let linesBeforePopPc = extractLinesBeforePopPc(disasContent);
+            let matchingStrings = findMatchingStrings(ropContent, linesBeforePopPc);
+            outputTextArea.value = matchingStrings.join('\n');
+        };
+        disasReader.readAsText(disasFile);
+    };
+    ropReader.readAsText(ropFile);
+}
+</script>
+
+</body>
+</html>
