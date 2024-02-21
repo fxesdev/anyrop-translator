@@ -16,10 +16,12 @@ def extract_lines_before_pop_pc(file_path):
 
 def find_matching_strings(list1, list2, list3):
     result = []
+    found = False
     for string1 in list1:
         match_info = ''
-        for string3 in list3:
-            for string2 in list2:
+        for string2 in list2:
+            found = False
+            for string3 in list3:
                 if string1 in string2:
                     fstring2 = string2.split(' ')[1]
                     print(fstring2)
@@ -27,10 +29,11 @@ def find_matching_strings(list1, list2, list3):
                         extracted_chars = string3[33:39]
                         formatted_chars = extracted_chars[3:5] + ' ' + extracted_chars[1:3] + ' ' + 'x' + extracted_chars[0] + ' xx'
                         result.append(formatted_chars)
+                        found = True
                         break
-                    break
+            if found: break
         else:
-            result.append(f"No match found for {string1}")
+            result.append(string1)
     return result
 
 def open_rop_file():
